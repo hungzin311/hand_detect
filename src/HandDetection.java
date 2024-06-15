@@ -13,17 +13,17 @@ public class HandDetection {
     public static void main(String[] args) {
         String handCascadePath = "D:/Git/hand_detect/data/fist.xml";
         CascadeClassifier handCascade = new CascadeClassifier(handCascadePath);
-
         VideoCapture capture = new VideoCapture(0);
 
         if (!capture.isOpened()) {
             System.out.println("Error: Failed to open camera.");
             return;
         }
-
         Mat frame = new Mat();
-        HighGui.namedWindow("Hand Detection", HighGui.WINDOW_AUTOSIZE);
+        Core.flip(frame, frame, 1);
 
+        HighGui.namedWindow("Hand Detection", HighGui.WINDOW_AUTOSIZE);
+        
         boolean shouldExit = false;
 
         while (!shouldExit) {
@@ -44,8 +44,13 @@ public class HandDetection {
             MatOfRect hands = new MatOfRect();
             handCascade.detectMultiScale(gray, hands, 1.1, 5, 0, new Size(30, 30), new Size());
 
+//          handCascade.detectMultiScale(gray, hands, 1.1, 5, 0, new Size(40, 70), new Size());
             // Avoid too much hand on the camera
+
             Rect[] handsArray = hands.toArray();
+
+
+
             int n = handsArray.length;
             double max = 0;
             int x_new = 0;
