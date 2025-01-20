@@ -1,48 +1,48 @@
-import java.awt.Button;
-import java.awt.Frame;
-import java.awt.Label;
-import java.awt.TextField;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 
-public class AWTCounter extends Frame implements ActionListener {
-    private Label lblCount;
-    private TextField tfCount;
-    private Button btnCount;
-    private int count = 0; // Counter's value
+public class SeatGUI extends JFrame {
 
-    // Setup GUI components and event handling
-    public AWTCounter() {
-        setLayout(new FlowLayout());
+    public SeatGUI() {
+        setTitle("Sơ đồ chỗ ngồi");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(5, 5, 5, 5));
 
-        lblCount = new Label("Counter");
-        add(lblCount);
+        for (int i = 1; i <= 25; i++) {
+            JButton button = new JButton("Ghế " + i);
 
-        tfCount = new TextField("0", 10);
-        tfCount.setEditable(false); // set to read-only
-        add(tfCount);
+            final int seatNumber = i;
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showSeatInfo(seatNumber);
+                }
+            });
+            add(button);
+        }
 
-        btnCount = new Button("Count");
-        add(btnCount);
-
-        //Clicking Button source fires ActionEvent
-        //btnCount registers this instance as ActionEvent listener
-        btnCount.addActionListener(this);
-
-        setTitle("AWT Counter");
-        setSize(250, 100);
-
-        setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
     }
-    /** ActionEvent handler - Called back upon button-click. */
-    public void actionPerformed(ActionEvent e) {
-        ++count;
-        // Display the counter value on the TextField
-        tfCount.setText(count + "");
+
+    private void showSeatInfo(int seatNumber){
+        // Giả lập thông tin ghế (trong thực tế, bạn sẽ lấy thông tin từ cơ sở dữ liệu)
+        String seatInfo = "Thông tin Ghế " + seatNumber + ":\n\n";
+        seatInfo += "Trạng thái: " + (seatNumber % 2 == 0 ? "Đã đặt" : "Trống") + "\n";
+        seatInfo += "Giá: " + (50000 + seatNumber * 1000) + " VND\n";
+        seatInfo += "Loại ghế: " + (seatNumber % 5 == 0 ? "VIP" : "Thường");
+
+        JOptionPane.showMessageDialog(this, seatInfo, "Thông tin Ghế " + seatNumber, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
-        AWTCounter app = new AWTCounter();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new SeatGUI().setVisible(true);
+            }
+        });
     }
 }
